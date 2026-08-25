@@ -100,7 +100,7 @@ type SelectorBaseProps = {
 
 type SelectorSimpleProps = {
   value?: string
-  onValueChange?: (value: string) => void
+  onValueChange?: (value: string | null) => void
   values?: never
   onValuesChange?: never
 }
@@ -157,13 +157,17 @@ export const Selector = React.memo(function Selector({
   }
 
   return (
-    <Select onValueChange={onValueChange} disabled={disabled} value={value}>
+    <Select
+      onValueChange={(newValue) => onValueChange?.(newValue)}
+      disabled={disabled}
+      value={value}
+    >
       <SelectTrigger
         className={`min-h-10 w-full rounded border-2 border-background6 bg-background3 px-3 py-2 text-sm focus:border-background6 ${extraClass}`}
       >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent position="popper">
+      <SelectContent>
         <SelectGroup>
           {isObjectArray(data)
             ? data.map((opcion) => {
@@ -296,17 +300,20 @@ export const SelectorConBusqueda = React.memo(function SelectorConBusqueda({
         }
       }}
     >
-      <PopoverTrigger asChild disabled={disabled}>
-        <button
-          type="button"
-          className={`flex min-h-10 w-full items-center justify-between rounded border-2 border-background6 bg-background3 px-3 py-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${extraClass ?? ""}`}
-        >
-          <span className={selectedLabel ? "" : "opacity-50"}>
-            {selectedLabel || placeholder}
-          </span>
-          <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
-        </button>
-      </PopoverTrigger>
+      <PopoverTrigger
+        disabled={disabled}
+        render={
+          <button
+            type="button"
+            className={`flex min-h-10 w-full items-center justify-between rounded border-2 border-background6 bg-background3 px-3 py-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${extraClass ?? ""}`}
+          >
+            <span className={selectedLabel ? "" : "opacity-50"}>
+              {selectedLabel || placeholder}
+            </span>
+            <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
+          </button>
+        }
+      />
       <PopoverContent
         className="w-(--radix-popover-trigger-width) p-2"
         align="start"
@@ -431,19 +438,22 @@ export const SelectorMultiple = React.memo(function SelectorMultiple({
 
   return (
     <Popover>
-      <PopoverTrigger asChild disabled={disabled}>
-        <button
-          type="button"
-          className={`flex min-h-10 w-full items-center justify-between rounded border-2 border-background6 bg-background3 px-3 py-2 text-left text-sm disabled:cursor-not-allowed disabled:opacity-50 ${extraClass ?? ""}`}
-        >
-          <span
-            className={`truncate ${values.length === 0 ? "opacity-50" : ""}`}
+      <PopoverTrigger
+        disabled={disabled}
+        render={
+          <button
+            type="button"
+            className={`flex min-h-10 w-full items-center justify-between rounded border-2 border-background6 bg-background3 px-3 py-2 text-left text-sm disabled:cursor-not-allowed disabled:opacity-50 ${extraClass ?? ""}`}
           >
-            {label}
-          </span>
-          <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
-        </button>
-      </PopoverTrigger>
+            <span
+              className={`truncate ${values.length === 0 ? "opacity-50" : ""}`}
+            >
+              {label}
+            </span>
+            <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
+          </button>
+        }
+      />
       <PopoverContent
         className="w-(--radix-popover-trigger-width) p-1"
         align="start"
@@ -666,11 +676,7 @@ export function ItemCard({
   const itemProps = { variant, size, className }
 
   if (href) {
-    return (
-      <Item {...itemProps} asChild>
-        <a href={href}>{content}</a>
-      </Item>
-    )
+    return <Item {...itemProps} render={<a href={href}>{content}</a>} />
   }
 
   return <Item {...itemProps}>{content}</Item>

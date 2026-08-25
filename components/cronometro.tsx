@@ -38,14 +38,16 @@ export function CronometroCreacion({
       <h1 className="font-mono text-xl">00:00:00</h1>
       <div className="flex gap-2">
         <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <BotonIcono
-              buttonClass="rounded bg-background6 p-2"
-              iconClass="size-6"
-              icono={Play}
-              disabled={disabled}
-            />
-          </AlertDialogTrigger>
+          <AlertDialogTrigger
+            render={
+              <BotonIcono
+                buttonClass="rounded bg-background6 p-2"
+                iconClass="size-6"
+                icono={Play}
+                disabled={disabled}
+              />
+            }
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>¿Está seguro?</AlertDialogTitle>

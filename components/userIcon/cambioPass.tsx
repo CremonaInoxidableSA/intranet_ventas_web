@@ -67,7 +67,10 @@ const CambioPass = ({ open, onOpenChange }: CambioPassProps) => {
     }
 
     if (form.new_password.length < 8) {
-      toast.add({ type: "error", description: "La contraseña debe tener al menos 8 caracteres" })
+      toast.add({
+        type: "error",
+        description: "La contraseña debe tener al menos 8 caracteres",
+      })
       return
     }
 
@@ -91,15 +94,24 @@ const CambioPass = ({ open, onOpenChange }: CambioPassProps) => {
       const data = await response.json()
 
       if (!response.ok) {
-        toast.add({ type: "error", description: data?.error ?? "Error al cambiar la contraseña" })
+        toast.add({
+          type: "error",
+          description: data?.error ?? "Error al cambiar la contraseña",
+        })
         return
       }
 
-      toast.add({ type: "success", description: "Contraseña actualizada correctamente" })
+      toast.add({
+        type: "success",
+        description: "Contraseña actualizada correctamente",
+      })
       handleClose()
       await logout()
     } catch {
-      toast.add({ type: "error", description: "Error de comunicación con el servidor" })
+      toast.add({
+        type: "error",
+        description: "Error de comunicación con el servidor",
+      })
     } finally {
       setLoading(false)
     }
@@ -153,11 +165,17 @@ const CambioPass = ({ open, onOpenChange }: CambioPassProps) => {
         </div>
 
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline" onClick={handleClose} disabled={loading}>
-              Cancelar
-            </Button>
-          </DialogClose>
+          <DialogClose
+            render={
+              <Button
+                variant="outline"
+                onClick={handleClose}
+                disabled={loading}
+              >
+                Cancelar
+              </Button>
+            }
+          />
 
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? (
